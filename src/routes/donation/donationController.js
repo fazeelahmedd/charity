@@ -2,18 +2,19 @@ const donationService = require("./donationService");
 
 const addDonation = async (req, res) => {
   try {
-    const donation = await donationService.addDonation(req.body);
+    const donation = await donationService.addDonation(req.body, req.user);
     res.status(200).json(donation);
   } catch (error) {
     console.log(error);
-    res.status(error.status).json({message: error.message});
+    res.status(error.status).json({ message: error.message });
   }
 };
 
 const getDonation = async (req, res) => {
   try {
-    const { username } = req.params;
+    const { username } = req.user;
     const viewDonation = await donationService.getDonation(username);
+    console.log(viewDonation);
     res.status(200).json(viewDonation);
   } catch (error) {
     console.log(error);
@@ -22,5 +23,5 @@ const getDonation = async (req, res) => {
 };
 module.exports = {
   addDonation,
-  getDonation
-}
+  getDonation,
+};

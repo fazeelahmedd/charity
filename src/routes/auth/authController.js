@@ -1,52 +1,38 @@
 const authService = require("./authService");
-const { AUTH_MESSAGES: {
-  INCORRECT_CREDENTIALS,
-  LOGOUT
-} } = require("../../messages/index")
+const {
+  AUTH_MESSAGES: { LOGOUT },
+} = require("../../messages/index");
 
-const authenticate = async (req, res) => {
-  try {
-    const user = await authService.authenticate(req.body);
-    user ? res.json(user) : res.status(400).json({ message: INCORRECT_CREDENTIALS })
-  } catch (error) {
-    console.log(error);
-    res.status(error.status).json({message: error.message});
-  }
+const login = async (req, res, next) => {
+  return await authService.login(req, res, next);
 };
 
 const register = async (req, res) => {
-  try {
-    const user = await authService.register(req.body);
-    res.status(200).json(user);
-  } catch (error) {
-    console.log(error.message);
-    res.status(error.status).json({message:error.message});
-  }
+  return await authService.register(req, res);
 };
-const logout = async (req, res) => {
+
+const logout = async (_, res) => {
   try {
-    res.status(200).json({message : LOGOUT});
+    res.status(200).json({ message: LOGOUT });
   } catch (error) {
     console.log(error.message);
-    res.status(error.status).json({message:error.message});
+    res.status(error.status).json({ message: error.message });
   }
 };
 
-const getAll = async (req, res) => {
+const getAll = async (_, res) => {
   try {
     const user = await authService.getAll();
     res.status(200).json(user);
   } catch (error) {
     console.log(error.message);
-    res.status(error.status).json({message:error.message});
+    res.status(error.status).json({ message: error.message });
   }
 };
 
 module.exports = {
-  authenticate,
+  login,
   register,
   getAll,
-  logout
+  logout,
 };
-
-
