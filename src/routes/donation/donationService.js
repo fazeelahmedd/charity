@@ -14,10 +14,10 @@ const addDonation = async (body, user) => {
   body.author = user._id;
   Transaction.create(body)
     .then(
-      (cart) => {
-        Transaction.findById(cart._id)
+      (transaction) => {
+        Transaction.findById(transaction._id)
           .populate("author")
-          .then((cart) => cart);
+          .then((transaction) => transaction);
       },
       (err) => {
         throw err;
@@ -26,11 +26,11 @@ const addDonation = async (body, user) => {
     .catch((err) => next(err));
 };
 
-const getDonation = async (username) => {
+const getDonation = async (_id) => {
   try {
-    return await Transaction.find()
+    return await Transaction.find({ author: _id })
       .populate("author")
-      .then((cart) => cart)
+      .then((transaction) => transaction)
       .catch((err) => next(err));
   } catch (error) {
     return { message: USERNAME_NOT_FOUND };

@@ -12,8 +12,8 @@ const addDonation = async (req, res) => {
 
 const getDonation = async (req, res) => {
   try {
-    const { username } = req.user;
-    const viewDonation = await donationService.getDonation(username);
+    const { _id } = req.user;
+    const viewDonation = await donationService.getDonation(_id);
     console.log(viewDonation);
     res.status(200).json(viewDonation);
   } catch (error) {
