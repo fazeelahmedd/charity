@@ -1,5 +1,6 @@
 const db = require("../../library/db");
 const Transaction = db.Transaction;
+const User = db.User;
 const {
   DONATION_MESSAGES: { SUCCESSFULLY_ADDED, USERNAME_NOT_FOUND },
 } = require("../../messages/index");
@@ -11,33 +12,44 @@ const addDonation = async (body, user) => {
     return next(err);
   }
 
-  body.author = user._id;
-  Transaction.create(body)
-    .then(
-      (transaction) => {
-        Transaction.findById(transaction._id)
-          .populate("author")
-          .then((transaction) => transaction);
-      },
-      (err) => {
-        throw err;
-      }
-    )
-    .catch((err) => next(err));
+  try {
+    body.author = user._id;
+    await Transaction.create(body);
+     await Transaction.findById(transaction._id).populate("author");
+  } catch (error) {
+    throw error;
+  }
 };
 
-const getDonation = async (_id) => {
+const userNameValidation = async () => {
   try {
-    return await Transaction.find({ author: _id })
-      .populate("author")
-      .then((transaction) => transaction)
-      .catch((err) => next(err));
+    const usernames = await User.find({}, ["username"]).lean()
+    console.log(usernames)
+    return usernames;
   } catch (error) {
     return { message: USERNAME_NOT_FOUND };
   }
 };
 
+const getDonation = async (username) => {
+  try {
+    const docs = await User.findOne({ username }).populate("donations");
+    return docs.donations;
+  } catch (error) {
+    return { message: USERNAME_NOT_FOUND };
+  }
+};
+
+const getDonationForUser = async (id) => {
+  try {
+    return await Transaction.find({ author: id });
+  } catch (error) {
+    throw error;
+  }
+};
 module.exports = {
   addDonation,
   getDonation,
+  getDonationForUser,
+  userNameValidation
 };

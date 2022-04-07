@@ -12,16 +12,38 @@ const addDonation = async (req, res) => {
 
 const getDonation = async (req, res) => {
   try {
-    const { _id } = req.user;
-    const viewDonation = await donationService.getDonation(_id);
-    console.log(viewDonation);
+    const { username } = req.params;
+    const viewDonation = await donationService.getDonation(username);
     res.status(200).json(viewDonation);
   } catch (error) {
     console.log(error);
     res.status(409).json({ error: error.message });
   }
 };
+
+const getDonationForUser = async (req,res) => {
+  try{
+    const donations = await donationService.getDonationForUser(req.user._id)
+    res.status(200).json(donations);
+  }catch(error){
+    res.status(409).json({ error: error.message });
+
+  }
+}
+
+const userNameValidation = async (req,res) => {
+  try{
+    const username = await donationService.userNameValidation()
+    res.status(200).json(username);
+  }catch(error){
+    res.status(409).json({ error: error.message });
+
+  }
+}
+
 module.exports = {
   addDonation,
   getDonation,
+  getDonationForUser,
+  userNameValidation
 };

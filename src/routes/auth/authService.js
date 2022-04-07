@@ -16,6 +16,7 @@ const authenticate = require("../../utils/authenticate");
 
 const login = async (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
+    adminStatus = user.admin
     if (err) return next(err);
 
     if (!user) {
@@ -37,7 +38,7 @@ const login = async (req, res, next) => {
       const token = authenticate.getToken({ _id: req.user._id });
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
-      res.json({ success: true, status: "Login Successful!", token: token });
+      res.json({ success: true, status: "Login Successful!", token: token, admin : adminStatus });
     });
   })(req, res, next);
 };
@@ -62,13 +63,14 @@ const register = async (req, res) => {
     new User({ username: req.body.username }),
     req.body.password,
     (err, user) => {
+      console.log(req.body)
       if (err) {
         res.statusCode = 500;
         res.setHeader("Content-Type", "application/json");
         res.json({ err: err });
       } else {
-        if (req.body.fullName) user.firstname = req.body.fullName;
-        if (req.body.phone) user.firstname = req.body.phone;
+        if (req.body.fullName) user.fullName = req.body.fullName;
+        if (req.body.phone) user.phone = req.body.phone;
 
         user.save((err, user) => {
           if (err) {

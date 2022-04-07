@@ -25,9 +25,15 @@ const User = new Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 
 User.plugin(passportLocalMongoose);
-
+User.virtual("donations", {
+  ref: "Transaction",
+  localField: "_id",
+  foreignField: "author",
+});
 module.exports = mongoose.model("User", User);
