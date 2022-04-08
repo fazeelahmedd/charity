@@ -1,10 +1,13 @@
 const express = require("express");
 const adminRouter = express.Router();
+const { adminPortal,getAllTransactions, getTransactionsByID } = require("./adminController");
+const authenticate = require("../../utils/authenticate");
 
-const { adminPortal } = require("./adminController");
 
 
+adminRouter.get("/",authenticate.verifyUser, authenticate.verifyAdmin, adminPortal);
+adminRouter.get("/transactions",authenticate.verifyUser, authenticate.verifyAdmin, getAllTransactions)
+adminRouter.get("/transactions/:id",authenticate.verifyUser, authenticate.verifyAdmin, getTransactionsByID)
 
-adminRouter.get("/", adminPortal);
 
 module.exports = adminRouter;

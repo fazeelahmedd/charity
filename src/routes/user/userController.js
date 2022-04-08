@@ -2,8 +2,7 @@ const userService = require("./userService");
 
 const userProfile = async (req, res) => {
     try {
-      const { username } = req.params;
-      const user = await userService.userProfile(username);
+      const user = await userService.userProfile(req);
       res.status(200).json(user);
     } catch (error) {
       console.log(error);

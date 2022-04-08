@@ -10,6 +10,7 @@ const schema = new Schema({
     sehri: { type: Number, default: null },
     remainingAmount: { type: Number, default: null },
     charityDate: { type: Date, default: Date.now },
+    username: { type: String, required : true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User"}
 });
 

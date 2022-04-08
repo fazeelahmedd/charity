@@ -7,15 +7,15 @@ const {
 
 const addDonation = async (body, user) => {
   if (body === null) {
-    err = new Error("Cart not found in request body");
+    err = new Error("Not Cannot");
     err.status = 404;
     return next(err);
   }
 
   try {
     body.author = user._id;
-    await Transaction.create(body);
-     await Transaction.findById(transaction._id).populate("author");
+    const transaction = await Transaction.create(body);
+    return await Transaction.findById(transaction._id).populate("author");
   } catch (error) {
     throw error;
   }
@@ -23,8 +23,7 @@ const addDonation = async (body, user) => {
 
 const userNameValidation = async () => {
   try {
-    const usernames = await User.find({}, ["username"]).lean()
-    console.log(usernames)
+    const usernames = await User.find({ admin: false }, ["username"]).lean();
     return usernames;
   } catch (error) {
     return { message: USERNAME_NOT_FOUND };
@@ -51,5 +50,5 @@ module.exports = {
   addDonation,
   getDonation,
   getDonationForUser,
-  userNameValidation
+  userNameValidation,
 };
